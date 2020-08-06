@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -16,11 +17,13 @@ import (
 	and startQuiz reads the answer from the channel
 */
 func getUserAnswer(ansChan chan string) {
+
 	var answer string
 	reader := bufio.NewReader(os.Stdin)
 	answer, _ = reader.ReadString('\n')
 	answer = strings.Replace(answer, "\r\n", "", -1)
 	ansChan <- answer
+
 }
 
 /*
@@ -56,9 +59,24 @@ func startQuiz(records [][]string, timerFlag *time.Duration) int {
 	return numCorrectAns
 }
 
+/*
+	shuffleRec shuffles the order of questions displayed
+*/
+func shuffleRec(records [][]string) {
+
+	rand.Seed(time.Now().UnixNano())
+	for i := len(records) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		records[i], records[j] = records[j], records[i]
+	}
+
+}
+
 func main() {
+
 	var timerFlag = flag.Duration("timer", 30*time.Second, "Flag to set test duration. Input format : `<time>s`(without quotes)")
 	var testFile = flag.String("test", "problems.csv", "File name of the test set.")
+	var shuffle = flag.Bool("shuffle", false, "Boolean flag to shuffle the test")
 	flag.Parse()
 
 	csvFile, err := os.Open(*testFile)
@@ -70,6 +88,10 @@ func main() {
 	csvReader := csv.NewReader(csvFile)
 	stdReader := bufio.NewReader(os.Stdin)
 	records, err := csvReader.ReadAll()
+
+	if *shuffle {
+		shuffleRec(records)
+	}
 
 	if err != nil {
 		log.Fatalln("Cannot parse test file:", err)
