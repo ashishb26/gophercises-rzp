@@ -89,13 +89,14 @@ func main() {
 	stdReader := bufio.NewReader(os.Stdin)
 	records, err := csvReader.ReadAll()
 
-	if *shuffle {
-		shuffleRec(records)
-	}
-
 	if err != nil {
 		log.Fatalln("Cannot parse test file:", err)
 		os.Exit(1)
+	}
+	
+
+	if *shuffle {
+		shuffleRec(records)
 	}
 
 	fmt.Println("Please enter any key to start the test")
