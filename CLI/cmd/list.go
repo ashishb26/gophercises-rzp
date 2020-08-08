@@ -22,7 +22,7 @@ var listCmd = &cobra.Command{
 		}
 
 		if len(taskList) == 0 {
-			fmt.Println("You have no tasks reamining")
+			fmt.Println("You have no tasks remaining")
 		} else {
 			for i, task := range taskList {
 				fmt.Printf("%d. %s\n", i+1, task.Value)
