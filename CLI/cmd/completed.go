@@ -16,7 +16,7 @@ func init() {
 
 var completedCmd = &cobra.Command{
 	Use:   "completed",
-	Short: "Marks the tasks from to-do list as complete",
+	Short: "Displays all tasks completed in the past hours mentioned",
 	Run: func(cmd *cobra.Command, args []string) {
 		var dur time.Duration
 		if len(args) == 0 {
